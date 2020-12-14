@@ -1,0 +1,55 @@
+
+
+<div class="main-list-container" >
+  <div class="form-header" [formGroup]="form">
+    <div class="row g-3">
+      <div class="col">
+        <input type="text" class="form-control" formControlName="filterText" placeholder="Super duper filter">
+      </div>
+      <div class="col">
+        <button [disabled]="loading$ | async" (click)="displayNewItemControl = !displayNewItemControl" type="button"
+          class="btn btn-outline-success">New</button>
+      </div>
+    </div>
+    <div *ngIf="displayNewItemControl" class="new-ticket-form">
+      <div class="form-floating">
+        <textarea [disabled]="loading$ | async" class="form-control" formControlName="newItemText" placeholder="Enter new ticket description here" id="floatingTextarea"></textarea>
+        <label for="floatingTextarea">Ticket Description</label>
+      </div>
+
+      <button [disabled]="loading$ | async" (click)="saveNewTicket()" type="button"
+        class="btn btn-outline-primary">Save</button>
+    </div>
+  </div>
+
+  <!-- <div class="form-filter" [formGroup]="form">
+    <input type="text" class="form-control" formControlName="filterText" placeholder="Super duper filter">
+  </div> -->
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Description</th>
+        <th scope="col">Assignee</th>
+        <th scope="col">Completed</th>
+        <th scope="col">Options</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ticket of tickets$ | async">
+        <td scope="row"><a [routerLink]="['/details', ticket.id]">{{ ticket.id }}</a></td>
+        <td>{{ ticket.description }}</td>
+        <td>
+          <select [(ngModel)]="ticket.assigneeId" (change)="updateUser(ticket, $event.target.value)" [disabled]="loading$ | async">
+            <option value=""></option>
+            <option *ngFor="let user of users$ | async" [value]="user.id" >{{ user.name }}</option>
+          </select>
+        </td>
+        <td>{{ ticket.completed ? 'Yes' : 'No' }}</td>
+        <td><button [disabled]="loading$ | async" (click)="toggleComplete(ticket)" type="button" class="btn btn-outline-primary">Toggle Complete</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 *ngIf="loading$ | async">Loading...</h3>
+</div>

@@ -1,14 +1,11 @@
 import { Component } from '@angular/core';
-import {BackendService} from './backend.service';
+import { BackendService } from './backend.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  tickets = this.backend.tickets();
-  users = this.backend.users();
-
-  constructor(private backend: BackendService) {}
+    constructor() {}
 }
