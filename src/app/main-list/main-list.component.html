@@ -40,13 +40,13 @@
         <td scope="row"><a [routerLink]="['/details', ticket.id]">{{ ticket.id }}</a></td>
         <td>{{ ticket.description }}</td>
         <td>
-          <select [(ngModel)]="ticket.assigneeId" (change)="updateUser(ticket, $event.target.value)" [disabled]="loading$ | async">
+          <select [(ngModel)]="ticket.assigneeId" (change)="updateUser(ticket, $event.target.value)" [disabled]="loading$ | async" class="form-control form-control-sm">
             <option value=""></option>
             <option *ngFor="let user of users$ | async" [value]="user.id" >{{ user.name }}</option>
           </select>
         </td>
         <td>{{ ticket.completed ? 'Yes' : 'No' }}</td>
-        <td><button [disabled]="loading$ | async" (click)="toggleComplete(ticket)" type="button" class="btn btn-outline-primary">Toggle Complete</button></td>
+        <td><button [disabled]="loading$ | async" (click)="toggleComplete(ticket)" type="button" class="btn btn-outline-primary btn-sm">Toggle Complete</button></td>
       </tr>
     </tbody>
   </table>
