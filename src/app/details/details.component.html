@@ -1,2 +1,7 @@
 <a [routerLink]="['/']">Back to Tickets</a>
-<pre>{{ ticket$ | async | json }}</pre>
+<div *ngIf="ticket$ | async as ticket; else loading">
+	<pre>{{ ticket | json }}</pre>
+</div>
+<ng-template #loading>
+	<h5>Loading...</h5>
+</ng-template>
