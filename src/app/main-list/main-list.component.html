@@ -4,7 +4,7 @@
   <div class="form-header" [formGroup]="form">
     <div class="row g-3">
       <div class="col">
-        <input type="text" class="form-control" formControlName="filterText" placeholder="Super duper filter">
+        <input type="search" class="form-control" formControlName="filterText" placeholder="Super duper filter">
       </div>
       <div class="col">
         <button [disabled]="loading$ | async" (click)="displayNewItemControl = !displayNewItemControl" type="button"
@@ -29,23 +29,30 @@
     <thead>
       <tr>
         <th scope="col">#</th>
+        <th scope="col">Completed</th>
         <th scope="col">Description</th>
         <th scope="col">Assignee</th>
-        <th scope="col">Completed</th>
         <th scope="col">Options</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let ticket of tickets$ | async">
         <td scope="row"><a [routerLink]="['/details', ticket.id]">{{ ticket.id }}</a></td>
-        <td>{{ ticket.description }}</td>
         <td>
-          <select [(ngModel)]="ticket.assigneeId" (change)="updateUser(ticket, $event.target.value)" [disabled]="loading$ | async" class="form-control form-control-sm">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" [checked]="ticket.completed" (change)="toggleComplete(ticket)" id="flexCheckChecked" [disabled]="loading$ | async">
+            <label class="form-check-label" for="flexCheckChecked">
+              {{ ticket.completed ? 'Yes' : 'No' }}
+            </label>
+          </div>
+        </td>
+        <td [class]="{'ticket-description': ticket.completed}">{{ ticket.description }}</td>
+        <td>
+          <select [(ngModel)]="ticket.assigneeId" (change)="updateUser(ticket, $event.target.value)" [disabled]="loading$ | async" class="form-select form-select-sm">
             <option value=""></option>
-            <option *ngFor="let user of users$ | async" [value]="user.id" >{{ user.name }}</option>
+            <option *ngFor="let user of users" [value]="user.id" >{{ user.name }}</option>
           </select>
         </td>
-        <td>{{ ticket.completed ? 'Yes' : 'No' }}</td>
         <td><button [disabled]="loading$ | async" (click)="toggleComplete(ticket)" type="button" class="btn btn-outline-primary btn-sm">Toggle Complete</button></td>
       </tr>
     </tbody>

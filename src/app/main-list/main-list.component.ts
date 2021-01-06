@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { debounceTime, map, startWith, tap } from 'rxjs/operators';
+import { debounceTime, map, startWith, tap, first } from 'rxjs/operators';
 import { BackendService, Ticket, User } from '../backend.service';
 
 interface UserTicket extends Ticket {
@@ -19,6 +19,7 @@ export class MainListComponent implements OnInit {
     public tickets$: Observable<UserTicket[]>;
     public users$: Observable<User[]>;
     public displayNewItemControl = false;
+    public users: User[] = [];
 
     constructor(private backend: BackendService, private fb: FormBuilder) {}
     ngOnInit() {
@@ -27,11 +28,16 @@ export class MainListComponent implements OnInit {
             newItemText: [''],
         });
         const filterChanges$ = this.form.get('filterText').valueChanges.pipe(startWith(''), debounceTime(300));
-        this.users$ = this.backend.users().pipe(
-            map((users) => {
-                return Object.entries(users).map(([key, user]) => user);
-            })
-        );
+        this.backend
+            .users()
+            .pipe(
+                map((users) => {
+                    return Object.entries(users).map(([key, user]) => user);
+                }),
+                first()
+            )
+            .subscribe((users) => (this.users = users));
+
         this.tickets$ = combineLatest([this.backend.tickets(), this.backend.users(), filterChanges$]).pipe(
             map(([tickets, users, filterText]) => {
                 return Object.entries(tickets)

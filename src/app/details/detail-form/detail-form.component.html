@@ -1,0 +1,12 @@
+<form [formGroup]="form">
+  <div class="form-group">
+    <input type="text" formControlName="description" class="form-control">
+  </div>
+  <div class="form-group">
+    <select formControlName="assigneeId" class="form-select form-select-sm">
+      <option value=""></option>
+      <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+    </select>
+  </div>
+</form>
+<button class="btn btn-success" (click)="saveButtonClick()">Save</button>

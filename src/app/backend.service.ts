@@ -100,6 +100,16 @@ export class BackendService {
 
         return this.tickets();
     }
+    updateTicket(ticket: Ticket) {
+        this.tickets()
+            .pipe(first())
+            .subscribe((tickets) => {
+                const updatedTickets = { ...tickets, [ticket.id]: ticket };
+                this.storedTickets$.next(updatedTickets);
+            });
+
+        return this.tickets();
+    }
 
     assign(ticketId: number, userId: number) {
         return combineLatest([this.tickets(), this.users()]).pipe(
